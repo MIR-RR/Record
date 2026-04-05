@@ -6,11 +6,15 @@ import RecordList from "./components/RecordList";
 import { supabase, supabaseInitError } from "./lib/supabase";
 
 const ROUTES = {
-  login: "/login",
+  login: "/Record/",
   app: "/app",
 };
 
 function getNormalizedRoute(pathname) {
+  if (pathname === "/Record") {
+    return ROUTES.login;
+  }
+
   if (pathname === ROUTES.app) {
     return ROUTES.app;
   }
