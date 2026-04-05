@@ -20,7 +20,6 @@ export default function DashboardShell({
 
         <div className="dashboard-shell__account">
           <div className="dashboard-shell__user">
-            <span className="dashboard-shell__user-label">当前用户</span>
             <strong className="dashboard-shell__user-value">{userEmail}</strong>
           </div>
 

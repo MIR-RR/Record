@@ -350,8 +350,8 @@ textarea {
 }
 
 .dashboard-shell__user {
-  display: grid;
-  gap: 4px;
+  display: flex;
+  align-items: center;
   text-align: right;
 }
 
@@ -592,7 +592,8 @@ textarea {
 .record-list-shell__content {
   min-height: 0;
   overflow: auto;
-  padding: 6px 8px 10px 2px;
+  padding: 10px 12px 12px 6px;
+  scrollbar-gutter: stable;
 }
 
 .record-list {
@@ -723,6 +724,7 @@ textarea {
 .detail-card--empty {
   min-height: 100%;
   width: 100%;
+  height: 100%;
   justify-items: center;
   justify-content: center;
   place-items: center;
@@ -766,8 +768,7 @@ textarea {
 .detail-card__header {
   position: relative;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
   gap: 16px;
 }
 
@@ -786,8 +787,9 @@ textarea {
 
 .detail-card__actions {
   display: flex;
+  margin-left: auto;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
 }
 
@@ -829,11 +831,13 @@ textarea {
 
 .detail-card__body {
   min-height: 0;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 18px;
   overflow: auto;
-  padding: 2px 8px 0 2px;
+  padding: 8px 12px 8px 8px;
+  scrollbar-gutter: stable;
+  flex: 1 1 auto;
 }
 
 .detail-card__meta {
@@ -842,6 +846,7 @@ textarea {
   gap: 10px;
   color: var(--text-soft);
   font-size: 0.9rem;
+  min-height: 42px;
 }
 
 .detail-card__meta-label {
@@ -854,8 +859,11 @@ textarea {
 }
 
 .detail-card__field--grow {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  align-self: stretch;
   min-height: 0;
-  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .detail-card__label {
@@ -884,8 +892,9 @@ textarea {
 }
 
 .detail-card__textarea {
-  min-height: 100%;
+  min-height: clamp(260px, 40vh, 100%);
   height: 100%;
+  flex: 1 1 auto;
   resize: none;
   padding: 16px 16px 18px;
   font-family: "Avenir Next", "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;

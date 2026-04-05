@@ -51,6 +51,13 @@ export default function RecordDetail({
           ←
         </button>
 
+        <div className="detail-card__meta">
+          <span className="detail-card__meta-label">更新时间</span>
+          <time className="detail-card__meta-value" dateTime={draft.updatedAt || undefined}>
+            {formatRecordTime(draft.updatedAt)}
+          </time>
+        </div>
+
         <div className="detail-card__actions">
           <button
             type="button"
@@ -69,13 +76,6 @@ export default function RecordDetail({
             {pending ? "保存中..." : "保存"}
           </button>
         </div>
-      </div>
-
-      <div className="detail-card__meta">
-        <span className="detail-card__meta-label">更新时间</span>
-        <time className="detail-card__meta-value" dateTime={draft.updatedAt || undefined}>
-          {formatRecordTime(draft.updatedAt)}
-        </time>
       </div>
 
       <div className="detail-card__body">
