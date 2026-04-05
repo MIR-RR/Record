@@ -6,8 +6,7 @@ const MODES = {
     actionLabel: "登录",
     switchLabel: "切换到注册",
     headline: "欢迎回来",
-    helper:
-      "使用你的 Supabase 账号登录，或者注册一个新账号开始记录。提交后我们会根据会话变化自动确认成功状态。",
+    helper: "使用你的账号登录，或者注册一个新账号记录美好生活",
     waitingCopy: "登录请求已提交，正在等待会话更新。",
     submitLabel: "登录",
   },
@@ -15,8 +14,7 @@ const MODES = {
     actionLabel: "注册",
     switchLabel: "切换到登录",
     headline: "创建新账号",
-    helper:
-      "注册后你可以直接进入记录空间。若 Supabase 需要邮件确认，我们会提示你下一步。",
+    helper: "注册后你可以直接进入记录空间，记录你的每一分时刻。",
     waitingCopy: "注册请求已提交，正在等待会话更新。",
     submitLabel: "注册",
   },
@@ -161,9 +159,7 @@ export default function AuthCard() {
               {feedback ? (
                 <p className={`auth-feedback auth-feedback--${feedback.type}`}>{feedback.text}</p>
               ) : (
-                <p className="auth-card__hint">
-                  登录和注册都由 Supabase 处理，成功后会自动跟随 session 更新。
-                </p>
+                <p className="auth-card__hint" />
               )}
             </div>
 
