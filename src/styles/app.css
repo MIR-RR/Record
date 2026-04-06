@@ -586,8 +586,6 @@ textarea {
   height: 64px;
   border-radius: 50%;
   overflow: hidden;
-  opacity: 0.18;
-  filter: grayscale(1);
 }
 
 .detail-card__empty-image {
