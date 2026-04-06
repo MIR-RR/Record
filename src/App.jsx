@@ -88,6 +88,8 @@ export default function App() {
   const [draft, setDraft] = useState(null);
   const [detailPending, setDetailPending] = useState(false);
   const [detailFeedback, setDetailFeedback] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
+  const [newlySavedId, setNewlySavedId] = useState(null);
   const recordsRequestIdRef = useRef(0);
   const activeUserIdRef = useRef(null);
 
@@ -357,6 +359,8 @@ export default function App() {
         );
         setSelectedRecordId(nextRecord.id);
         setDraft(createDraft(nextRecord));
+        setNewlySavedId(nextRecord.id);
+        setTimeout(() => setNewlySavedId(null), 600);
       }
 
       setDetailFeedback({ type: "success", text: "记录已保存。" });
@@ -375,21 +379,25 @@ export default function App() {
       return;
     }
 
+    const deletingId = draft.id;
+    setRemovingId(deletingId);
     setDetailPending(true);
     setDetailFeedback({ type: "pending", text: "正在删除记录..." });
+
+    await new Promise((resolve) => setTimeout(resolve, 260));
 
     try {
       const { error } = await supabase
         .from("records")
         .delete()
-        .eq("id", draft.id)
+        .eq("id", deletingId)
         .eq("user_id", session.user.id);
 
       if (error) {
         throw error;
       }
 
-      setRecords((currentRecords) => currentRecords.filter((record) => record.id !== draft.id));
+      setRecords((currentRecords) => currentRecords.filter((record) => record.id !== deletingId));
       setSelectedRecordId(null);
       setDraft(null);
       setDetailFeedback(null);
@@ -399,18 +407,23 @@ export default function App() {
         text: error instanceof Error ? error.message : "删除失败，请稍后重试。",
       });
     } finally {
+      setRemovingId(null);
       setDetailPending(false);
     }
   }
 
-  const sidebarRecords = records.map((record) =>
-    record.id === selectedRecordId && draft
-      ? {
-          ...record,
-          title: draft.title || record.title,
-        }
-      : record
-  );
+  const unsavedEntry = draft && !draft.id
+    ? [{ id: null, title: draft.title, updatedAt: draft.updatedAt }]
+    : [];
+
+  const sidebarRecords = [
+    ...unsavedEntry,
+    ...records.map((record) =>
+      record.id === selectedRecordId && draft
+        ? { ...record, title: draft.title || record.title }
+        : record
+    ),
+  ];
 
   const selectedRecord = selectedRecordId
     ? records.find((record) => record.id === selectedRecordId) || null
@@ -459,6 +472,8 @@ export default function App() {
             selectedId={selectedRecordId}
             onSelect={handleSelectRecord}
             onCreate={handleCreateRecord}
+            removingId={removingId}
+            newlySavedId={newlySavedId}
           />
         }
         detail={

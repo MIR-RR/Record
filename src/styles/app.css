@@ -42,6 +42,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Subtle dot-grid texture — overlays all content, fades in from top */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 55%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 55%);
+  pointer-events: none;
+  z-index: 9999;
+}
+
 button,
 input,
 textarea {
@@ -476,6 +489,23 @@ textarea {
   border-color: var(--accent);
 }
 
+@keyframes listItemExit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 72px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-10px);
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
 .record-list {
   display: flex;
   flex-direction: column;
@@ -503,6 +533,24 @@ textarea {
 .record-list__item.is-active {
   border-left-color: var(--accent);
   background: rgba(207, 242, 77, 0.04);
+}
+
+.record-list__item--new {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 240ms cubic-bezier(0.2, 0, 0, 1),
+              transform 240ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.record-list__item--new.is-entered {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.record-list__item--removing {
+  animation: listItemExit 260ms ease forwards;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .record-list__meta {
@@ -763,6 +811,25 @@ textarea {
   border-bottom-color: var(--accent);
 }
 
+.detail-card__title-hint {
+  display: block;
+  padding: 6px 24px 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: opacity 140ms;
+}
+
+.detail-card__title-hint:hover {
+  opacity: 1;
+}
+
 .detail-card__textarea {
   flex: 1 1 auto;
   min-height: 0;
@@ -980,6 +1047,20 @@ textarea {
 
   .detail-card__body {
     padding-bottom: 68px;
+  }
+
+  /* Gradient backdrop behind floating buttons */
+  .dashboard-panel--sidebar::after,
+  .dashboard-panel--detail::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to top, var(--bg) 40%, transparent);
+    pointer-events: none;
+    z-index: 29;
   }
 }
 
