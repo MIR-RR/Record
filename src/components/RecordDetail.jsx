@@ -1,4 +1,7 @@
+import { useRef } from "react";
 import welcomeImage from "../assets/images/初始化图.png";
+
+const DEFAULT_TITLE_RE = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
 
 function formatRecordTime(value) {
   if (!value) {
@@ -30,6 +33,8 @@ export default function RecordDetail({
   onDelete,
   onBack,
 }) {
+  const titleRef = useRef(null);
+  const isDefaultTitle = draft ? DEFAULT_TITLE_RE.test(draft.title) : false;
   if (!draft) {
     return (
       <section className="detail-card detail-card--empty" aria-label="记录详情">
@@ -82,6 +87,7 @@ export default function RecordDetail({
         <label className="detail-card__field">
           <span className="detail-card__label">标题</span>
           <input
+            ref={titleRef}
             className="detail-card__input"
             type="text"
             value={draft.title}
@@ -89,6 +95,15 @@ export default function RecordDetail({
             placeholder="请输入标题"
             disabled={pending}
           />
+          {isDefaultTitle && (
+            <button
+              type="button"
+              className="detail-card__title-hint"
+              onClick={() => titleRef.current?.focus()}
+            >
+              （点击此处修改标题）
+            </button>
+          )}
         </label>
 
         <label className="detail-card__field detail-card__field--grow">
