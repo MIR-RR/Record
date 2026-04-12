@@ -100,17 +100,13 @@ export default function AuthCard() {
   return (
     <section className="auth-page">
       <div className="auth-page__rail">
-        <div className="auth-page__logo-frame" aria-hidden="true">
-          <div className="auth-page__logo-frame-inner">
-            <img
-              className="auth-page__logo"
-              src={logoImage}
-              alt="Record Space logo"
-              width="132"
-              height="132"
-            />
-          </div>
-        </div>
+        <img
+          className="auth-page__logo"
+          src={logoImage}
+          alt="Record Space logo"
+          width="132"
+          height="132"
+        />
         <h1 className="auth-page__title">{currentMode.headline}</h1>
         <p className="auth-page__copy">{currentMode.helper}</p>
       </div>
