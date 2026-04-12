@@ -20,3 +20,19 @@ export function formatDateTime(value) {
 export function createDefaultTitle(value = new Date()) {
   return formatDateTime(value);
 }
+
+export function shouldAutoSelectTitle(draft, selectedRecord) {
+  if (!draft) {
+    return false;
+  }
+
+  return draft.id === null && !selectedRecord;
+}
+
+export function getDraftSaveValidationMessage(draft) {
+  if (!draft?.title?.trim()) {
+    return "标题不能为空。";
+  }
+
+  return null;
+}

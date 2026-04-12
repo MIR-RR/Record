@@ -4,13 +4,18 @@ import DashboardShell from "./components/DashboardShell";
 import RecordDetail from "./components/RecordDetail";
 import RecordList from "./components/RecordList";
 import {
+  loadRecordsCache,
+  persistRecordsCache,
+  RECORDS_CACHE_LIMIT,
+} from "./lib/records-cache";
+import {
   clearNoteDraft,
   loadNoteDraft,
   persistNoteDraft,
   shouldRestoreNoteDraft,
 } from "./lib/record-draft";
 import { supabase, supabaseInitError } from "./lib/supabase";
-import { createDefaultTitle } from "./components/record-utils";
+import { createDefaultTitle, getDraftSaveValidationMessage } from "./components/record-utils";
 import { applyTheme, persistTheme, readStoredTheme, resolveThemePreference } from "./lib/theme";
 
 const APP_ROUTE = "/Record/";
@@ -45,7 +50,8 @@ async function fetchRecordsForUser(userId) {
     .select("id, title, content, created_at, update_at, user_id")
     .eq("user_id", userId)
     .order("update_at", { ascending: false, nullsFirst: false })
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(RECORDS_CACHE_LIMIT);
 
   if (error) {
     throw error;
@@ -127,7 +133,7 @@ export default function App() {
   const createPendingRef = useRef(false);
   const saveNowRef = useRef(null);
 
-  const refreshRecords = useCallback(async (userId) => {
+  const refreshRecords = useCallback(async (userId, { preserveVisibleRecords = false } = {}) => {
     const requestId = recordsRequestIdRef.current + 1;
     recordsRequestIdRef.current = requestId;
 
@@ -140,7 +146,7 @@ export default function App() {
     }
 
     activeUserIdRef.current = userId;
-    setRecordsLoading(true);
+    setRecordsLoading(!preserveVisibleRecords);
     setRecordsError("");
 
     try {
@@ -150,14 +156,18 @@ export default function App() {
         return;
       }
 
-      setRecords(nextRecords.map(mapRecord));
+      const mappedRecords = nextRecords.map(mapRecord);
+      setRecords(mappedRecords);
+      persistRecordsCache(userId, mappedRecords);
     } catch (error) {
       if (recordsRequestIdRef.current !== requestId || activeUserIdRef.current !== userId) {
         return;
       }
 
-      setRecords([]);
-      setRecordsError(error instanceof Error ? error.message : "加载记录失败。");
+      if (!preserveVisibleRecords) {
+        setRecords([]);
+        setRecordsError(error instanceof Error ? error.message : "加载记录失败。");
+      }
     } finally {
       if (recordsRequestIdRef.current === requestId && activeUserIdRef.current === userId) {
         setRecordsLoading(false);
@@ -290,12 +300,13 @@ export default function App() {
 
     const trimmedTitle = currentDraft.title.trim();
     const trimmedBody = currentDraft.body.trim();
+    const validationMessage = getDraftSaveValidationMessage(currentDraft);
 
-    if (!trimmedTitle || !trimmedBody) {
+    if (validationMessage) {
       if (allowInvalid) {
         setDetailFeedbackOverride({
           type: "error",
-          text: !trimmedTitle ? "标题不能为空。" : "内容不能为空。",
+          text: validationMessage,
         });
         setSaveStatus("error");
       }
@@ -477,8 +488,26 @@ export default function App() {
       return;
     }
 
-    refreshRecords(userId);
+    const cachedRecords = loadRecordsCache(userId);
+
+    if (cachedRecords?.records?.length) {
+      setRecords(cachedRecords.records);
+      setRecordsError("");
+      setRecordsLoading(false);
+    }
+
+    refreshRecords(userId, { preserveVisibleRecords: Boolean(cachedRecords?.records?.length) });
   }, [refreshRecords, session]);
+
+  useEffect(() => {
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return;
+    }
+
+    persistRecordsCache(userId, records);
+  }, [records, session?.user?.id]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {

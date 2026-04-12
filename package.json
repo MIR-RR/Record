@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test": "node --test test/theme.test.js",
+    "test": "node --test test/theme.test.js test/record-draft.test.js test/records-cache.test.js test/record-detail.test.js test/record-save-validation.test.js test/auth-logo-frame.test.js",
     "preview": "vite preview",
     "lint": "eslint .",
     "predeploy": "npm run build",

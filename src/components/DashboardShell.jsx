@@ -1,3 +1,5 @@
+import logoImage from "../assets/images/logo.png";
+
 function SunIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="dashboard-shell__theme-icon">
@@ -43,6 +45,13 @@ export default function DashboardShell({
     <main className="dashboard-shell">
       <header className="dashboard-shell__topbar">
         <div className="dashboard-shell__identity">
+          <img
+            className="dashboard-shell__logo"
+            src={logoImage}
+            alt="Record Space logo"
+            width="40"
+            height="40"
+          />
           <div>
             <h1 className="dashboard-shell__title">Record Space</h1>
             <p className="dashboard-shell__subtitle">像写便签一样快速留下灵感、待办和当天发生的重要事。</p>
