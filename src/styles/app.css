@@ -955,6 +955,10 @@ textarea {
   background: var(--accent-dim);
   color: var(--accent);
 }
+.detail-card__message--dirty {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
 .detail-card__message--success {
   background: var(--success-dim);
   color: var(--success);

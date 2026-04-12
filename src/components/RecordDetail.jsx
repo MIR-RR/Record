@@ -27,6 +27,7 @@ export default function RecordDetail({
   draft,
   selectedRecord,
   pending,
+  saveStatus,
   feedback,
   onChange,
   onSave,
@@ -78,7 +79,7 @@ export default function RecordDetail({
             onClick={onSave}
             disabled={pending}
           >
-            {pending ? "保存中..." : "保存"}
+            {saveStatus === "saving" ? "保存中..." : "保存"}
           </button>
         </div>
       </div>
