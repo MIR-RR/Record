@@ -47,9 +47,9 @@ export default function RecordList({
 }) {
   let content = null;
 
-  if (loading) {
+  if (loading && !records.length) {
     content = <div className="record-list__state" aria-live="polite">正在加载记录...</div>;
-  } else if (error) {
+  } else if (error && !records.length) {
     content = (
       <div className="record-list__state record-list__state--error" role="alert">
         <strong className="record-list__state-title">记录加载失败</strong>

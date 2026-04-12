@@ -1,5 +1,6 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import welcomeImage from "../assets/images/初始化图.png";
+import { shouldAutoSelectTitle } from "./record-utils";
 
 const DEFAULT_TITLE_RE = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
 
@@ -36,6 +37,21 @@ export default function RecordDetail({
 }) {
   const titleRef = useRef(null);
   const isDefaultTitle = draft ? DEFAULT_TITLE_RE.test(draft.title) : false;
+  const autoSelectTitle = shouldAutoSelectTitle(draft, selectedRecord);
+
+  useEffect(() => {
+    if (!autoSelectTitle || !titleRef.current) {
+      return;
+    }
+
+    const raf = requestAnimationFrame(() => {
+      titleRef.current?.focus();
+      titleRef.current?.select();
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [autoSelectTitle, draft?.id]);
+
   if (!draft) {
     return (
       <section className="detail-card detail-card--empty" aria-label="记录详情">
