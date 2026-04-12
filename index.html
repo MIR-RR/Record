@@ -11,6 +11,14 @@
       rel="stylesheet"
     />
     <link rel="icon" href="/favicon.ico" />
+    <script>
+      (() => {
+        const key = "record-space-theme";
+        const value = window.localStorage.getItem(key);
+        const theme = value === "dark" || value === "light" ? value : "light";
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </head>
   <body>
