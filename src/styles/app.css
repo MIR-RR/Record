@@ -1,10 +1,37 @@
 /* ===== DESIGN TOKENS ===== */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   --font-mono: "JetBrains Mono", "IBM Plex Mono", "Courier New", monospace;
   --font-serif: "DM Serif Display", "Noto Serif SC", "Georgia", serif;
   --font-sans: "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
 
+  --bg: #f5f1e8;
+  --surface: #ece5d9;
+  --surface-2: #fffdf8;
+  --border: rgba(34, 28, 20, 0.08);
+  --border-mid: rgba(34, 28, 20, 0.14);
+  --border-strong: rgba(34, 28, 20, 0.22);
+  --text: #191611;
+  --text-dim: rgba(25, 22, 17, 0.72);
+  --text-muted: rgba(25, 22, 17, 0.45);
+  --accent: #9db532;
+  --accent-dim: rgba(157, 181, 50, 0.14);
+  --accent-contrast: #17140f;
+  --error: #d05c52;
+  --error-dim: rgba(208, 92, 82, 0.12);
+  --success: #278f6d;
+  --success-dim: rgba(39, 143, 109, 0.12);
+  --dot-grid: rgba(45, 37, 25, 0.08);
+  --focus-ring: rgba(157, 181, 50, 0.18);
+  --accent-outline: rgba(157, 181, 50, 0.38);
+  --record-hover: rgba(25, 22, 17, 0.035);
+  --record-active: rgba(157, 181, 50, 0.1);
+  --danger-border: rgba(208, 92, 82, 0.22);
+  --danger-border-strong: rgba(208, 92, 82, 0.4);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #0d0d0d;
   --surface: #141414;
   --surface-2: #1c1c1c;
@@ -16,10 +43,18 @@
   --text-muted: rgba(237, 234, 228, 0.35);
   --accent: #cff24d;
   --accent-dim: rgba(207, 242, 77, 0.1);
+  --accent-contrast: #0d0d0d;
   --error: #ff5f57;
   --error-dim: rgba(255, 95, 87, 0.1);
   --success: #34d399;
   --success-dim: rgba(52, 211, 153, 0.1);
+  --dot-grid: rgba(255, 255, 255, 0.07);
+  --focus-ring: rgba(207, 242, 77, 0.12);
+  --accent-outline: rgba(207, 242, 77, 0.35);
+  --record-hover: rgba(255, 255, 255, 0.03);
+  --record-active: rgba(207, 242, 77, 0.04);
+  --danger-border: rgba(255, 95, 87, 0.2);
+  --danger-border-strong: rgba(255, 95, 87, 0.4);
 }
 
 * {
@@ -47,7 +82,7 @@ body::after {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-image: radial-gradient(circle, var(--dot-grid) 1px, transparent 1px);
   background-size: 28px 28px;
   mask-image: linear-gradient(to bottom, transparent 0%, black 55%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 55%);
@@ -176,7 +211,7 @@ textarea {
 
 .auth-card__mode.is-active {
   background: var(--accent);
-  color: #0d0d0d;
+  color: var(--accent-contrast);
   font-weight: 700;
 }
 
@@ -222,7 +257,7 @@ textarea {
 
 .auth-field__input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(207, 242, 77, 0.12);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .auth-card__feedback {
@@ -264,7 +299,7 @@ textarea {
   border: 0;
   border-radius: 2px;
   background: var(--accent);
-  color: #0d0d0d;
+  color: var(--accent-contrast);
   font-family: var(--font-mono);
   font-size: 0.78rem;
   letter-spacing: 0.12em;
@@ -361,6 +396,43 @@ textarea {
   display: flex;
   align-items: center;
   gap: 14px;
+}
+
+.dashboard-shell__theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border-mid);
+  border-radius: 2px;
+  background: var(--surface);
+}
+
+.dashboard-shell__theme-option {
+  width: 28px;
+  height: 26px;
+  border: 0;
+  border-radius: 1px;
+  background: transparent;
+  color: var(--text-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 140ms, color 140ms, transform 140ms;
+}
+
+.dashboard-shell__theme-option:hover {
+  color: var(--text);
+}
+
+.dashboard-shell__theme-option.is-active {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.dashboard-shell__theme-icon {
+  width: 14px;
+  height: 14px;
 }
 
 .dashboard-shell__user {
@@ -471,7 +543,7 @@ textarea {
   flex-shrink: 0;
   margin: 0 14px 14px;
   height: 36px;
-  border: 1px dashed rgba(207, 242, 77, 0.35);
+  border: 1px dashed var(--accent-outline);
   border-radius: 2px;
   padding: 0 14px;
   background: transparent;
@@ -527,12 +599,12 @@ textarea {
 }
 
 .record-list__item:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--record-hover);
 }
 
 .record-list__item.is-active {
   border-left-color: var(--accent);
-  background: rgba(207, 242, 77, 0.04);
+  background: var(--record-active);
 }
 
 .record-list__item--new {
@@ -603,7 +675,7 @@ textarea {
 }
 
 .record-list__state--error {
-  border-color: rgba(255, 95, 87, 0.2);
+  border-color: var(--danger-border);
   color: var(--error);
 }
 
@@ -745,14 +817,14 @@ textarea {
 }
 
 .detail-card__button--ghost:hover:not(:disabled) {
-  border-color: rgba(255, 95, 87, 0.4);
+  border-color: var(--danger-border-strong);
   color: var(--error);
 }
 
 .detail-card__button--primary {
   border: 0;
   background: var(--accent);
-  color: #0d0d0d;
+  color: var(--accent-contrast);
   font-weight: 700;
   min-width: 72px;
 }
@@ -968,7 +1040,7 @@ textarea {
   border-radius: 2px;
   padding: 0 20px;
   background: var(--accent);
-  color: #0d0d0d;
+  color: var(--accent-contrast);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.12em;
@@ -1075,6 +1147,10 @@ textarea {
 
   .dashboard-shell__topbar {
     padding: 0 16px;
+  }
+
+  .dashboard-shell__account {
+    gap: 10px;
   }
 
   .detail-card__input {

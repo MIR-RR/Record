@@ -5,6 +5,7 @@ import RecordDetail from "./components/RecordDetail";
 import RecordList from "./components/RecordList";
 import { supabase, supabaseInitError } from "./lib/supabase";
 import { createDefaultTitle } from "./components/record-utils";
+import { applyTheme, persistTheme, readStoredTheme, resolveThemePreference } from "./lib/theme";
 
 const APP_ROUTE = "/Record/";
 
@@ -77,6 +78,7 @@ function createDraft(record) {
 }
 
 export default function App() {
+  const [theme, setTheme] = useState(() => readStoredTheme());
   const [session, setSession] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [bootstrapError, setBootstrapError] = useState("");
@@ -185,6 +187,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const resolvedTheme = resolveThemePreference(theme);
+    applyTheme(resolvedTheme);
+    persistTheme(resolvedTheme);
+  }, [theme]);
+
+  useEffect(() => {
     const userId = session?.user?.id;
 
     if (!userId) {
@@ -234,6 +242,13 @@ export default function App() {
     } finally {
       setLogoutPending(false);
     }
+  }
+
+  function handleThemeChange(nextTheme) {
+    setTheme((currentTheme) => {
+      const resolvedNextTheme = resolveThemePreference(nextTheme);
+      return currentTheme === resolvedNextTheme ? currentTheme : resolvedNextTheme;
+    });
   }
 
   function handleCreateRecord() {
@@ -461,6 +476,8 @@ export default function App() {
         userEmail={session.user?.email || "已登录用户"}
         onLogout={handleLogout}
         logoutPending={logoutPending}
+        theme={theme}
+        onThemeChange={handleThemeChange}
         detailOpen={Boolean(draft)}
         detailEyebrow={detailEyebrow}
         detailTitle={detailTitle}
